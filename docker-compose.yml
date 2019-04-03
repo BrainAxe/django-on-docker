@@ -1,0 +1,44 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:9.6-alpine
+    environment:
+      - POSTGRES_USER=${DBUSER}
+      - POSTGRES_PASSWORD=${DBPASS}
+      - POSTGRES_DB=${DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "4949:5432"
+  web:
+    build: ./app
+    command: sh -c "/usr/src/app/wait-for.sh db:5432 -- python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic --no-input && gunicorn djangoApp.wsgi:application --bind 0.0.0.0:8000"
+    environment:
+      - POSTGRES_USER=${DBUSER}
+      - POSTGRES_PASSWORD=${DBPASS}
+      - POSTGRES_DB=${DB}
+    volumes:
+      - ./app:/usr/src/app/
+      - static_volume:/usr/src/app/djangoApp/settings/staticfiles
+      - media_volume:/usr/src/app/mediafiles
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+  
+  nginx:
+    restart: always
+    build: ./nginx
+    volumes:
+      - static_volume:/usr/src/app/djangoApp/settings/staticfiles
+      - media_volume:/usr/src/app/mediafiles
+    ports:
+      - "1337:80"
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
