@@ -1,9 +1,11 @@
-FROM python:3.7-alpine
-LABEL maintainer="tanzimrizwan@outlook.com"
+FROM python:3.8-alpine
 
-ENV PYTHONUNBUFFERED 1 
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV DEBUG 0
 
-COPY ./requirements.txt /requirements.txt 
+COPY ./requirements.txt /requirements.txt
 
 RUN apk add --no-cache --virtual .build-deps \
     ca-certificates gcc postgresql-dev linux-headers musl-dev \
@@ -12,13 +14,13 @@ RUN apk add --no-cache --virtual .build-deps \
 
 
 
-RUN mkdir /usr/src/app 
+RUN mkdir /usr/src/app
+COPY . /usr/src/app/
 WORKDIR /usr/src/app
-COPY . /usr/src/app/ 
 
 
-
-RUN adduser -D tanzim 
-RUN chown -R tanzim /usr/src/app/
-USER tanzim
+RUN adduser -D django
+RUN chown -R django:django /usr/src/app
+RUN chmod 755 /usr/src/app
+USER django
 
