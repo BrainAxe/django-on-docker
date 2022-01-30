@@ -1,11 +1,11 @@
 # What is this?
 
 
-This repository contains a template of docker containers which includes django and more for building fast, robust, and adaptable docker containers. 
+This repository contains a template of docker containers which includes django and more for building fast, robust, and adaptable docker containers.
 
 ## Getting Started
 
-These instructions will cover usage information and for the docker container 
+These instructions will cover usage information and for the docker container
 
 ### Prerequisities
 
@@ -29,9 +29,9 @@ Visit [localhost:1337](URL) in web browser to see the webapp in action!
 
 ## Built With
 
-* python:3.7-alpine
-* postgres:9.6-alpine
-* nginx:1.15.0-alpine
+* python:3.8-alpine
+* postgres:14-alpine
+* nginx:1.21.6-alpine
 
 
 
